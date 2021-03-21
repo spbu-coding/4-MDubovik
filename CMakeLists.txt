@@ -3,5 +3,5 @@ project(tests LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(converter src/converter.c src/mine_realisation.c)
+add_executable(converter src/converter.c src/mine_realisation.c src/other_realisation.c src/qdbmp.c)
 add_executable(comparer src/comparer.c src/mine_realisation.c)
