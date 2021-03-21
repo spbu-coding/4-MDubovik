@@ -3,7 +3,5 @@ project(tests LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
 
-file(GLOB_RECURSE converter_sources src/*.c src/*.h)
-
-add_executable(converter ${converter_sources})
-#add_executable(comparer )
+add_executable(converter src/converter.c src/mine_realisation.c other_realisation.c)
+add_executable(comparer src/comparer.c src/mine_realisation.c)
