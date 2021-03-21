@@ -51,5 +51,6 @@ typedef struct bitmap_ {
 
 int read_file(char* filename, bitmap* bmp);
 int invert_colors(char* output_file, bitmap* bmp);
+int compare_BMP(bitmap *image1, bitmap *image2);
 
 #endif //TESTS_MINE_REALISATION_H

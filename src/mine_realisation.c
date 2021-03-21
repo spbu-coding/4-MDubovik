@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX_DEVIATION_COUNT 100
+
 int read_file(char* filename, bitmap* bmp){
     FILE* bmp_input_file = fopen(filename, "rb");
 
@@ -135,3 +137,61 @@ int invert_colors(char* output_file, bitmap* bmp) {
     return 0;
 }
 
+int compare_pixel(rgbquad p1, rgbquad p2) {
+    return (p1.blue - p2.blue || p1.green - p2.green || p1.red - p2.red);
+}
+
+int compare_BMP(bitmap *image1, bitmap *image2) {
+    if (image1->info_header.biBitCount != image2->info_header.biBitCount) {
+        printf("Images have different bits per pixel\n");
+        return -1;
+    }
+    LONG width1 = image1->info_header.biWidth;
+    LONG height1 = image1->info_header.biHeight;
+    LONG width2 = image2->info_header.biWidth;
+    LONG height2 = image2->info_header.biHeight;
+    if (width1 != width2) {
+        fprintf(stderr, "Images have different widths\n");
+        return -1;
+    }
+    if (abs(height1) != abs(height2)) {
+        fprintf(stderr, "Images have different widths\n");
+        return -1;
+    }
+    int deviation_count = 0;
+    int abs_height = abs(height1);
+    BYTE bytes_per_pixel = image1->info_header.biBitCount / 8;
+    WORD bytes_per_row = image1->info_header.biSizeImage / abs(image1->info_header.biHeight);
+    if (image2->info_header.biHeight == 24) {
+        for (int i = 0; i < abs_height && deviation_count < MAX_DEVIATION_COUNT; ++i) {
+            for (int j = 0; j < width1 && deviation_count < MAX_DEVIATION_COUNT; ++j) {
+                for(int k = 0; k < 3; ++k) {
+                    BYTE b1 = image1->data[i * width1 + j * bytes_per_pixel + k];
+                    BYTE b2 = image2->data[i * width1 + j * bytes_per_pixel + k];
+                    if (b1 != b2) {
+                        printf("%d %d", i, j);
+                        deviation_count++;
+                        break;
+                    }
+                }
+                printf("\n");
+            }
+        }
+    } else {
+        for (int i = 0; i < abs_height && deviation_count < MAX_DEVIATION_COUNT; ++i) {
+            for (int j = 0; j < width1 && deviation_count < MAX_DEVIATION_COUNT; ++j) {
+                for(int k = 0; k < 3; ++k) {
+                    BYTE b1 = image1->data[i * width1 + j * bytes_per_pixel + k];
+                    BYTE b2 = image2->data[i * width1 + j * bytes_per_pixel + k];
+                    if (compare_pixel(image1->palette[b1], image2->palette[b2]) != 0) {
+                        printf("%d %d", i, j);
+                        deviation_count++;
+                        printf("\n");
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}

@@ -1,5 +1,5 @@
 #include "other_realisation.h"
-#include "other/qdbmp.h"
+#include "qdbmp.h"
 
 
 int invert_colors_other(char* input, char* output) {

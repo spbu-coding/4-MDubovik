@@ -1,6 +1,6 @@
 #include "mine_realisation.h"
 #include "other_realisation.h"
-#include "other/qdbmp.h"
+#include "qdbmp.h"
 #include <stdio.h>
 #include <string.h>
 
